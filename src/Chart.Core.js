@@ -1545,7 +1545,28 @@
 			}
 		}
 	});
+	Chart.BackgroundImage = Chart.Element.extend({
+		initialize : function(){
+			this.fit();
+		},
+		fit: function(){
+			// MUST define the X
+			this.startPoint = this.startY;
+			this.endPoint = this.endY;
 
+		},
+		drawingArea: function(){
+			return this.startPoint - this.endPoint;
+		},
+		draw: function(){
+			ctx = this.ctx;
+			color = this.bgColor;
+			ctx.rect(this.startPoint, this.endPoint, this.bgWidth, this.bgHeight);
+			ctx.fillStyle = color;
+			ctx.fill();
+		}
+
+	});
 	Chart.Scale = Chart.Element.extend({
 		initialize : function(){
 			this.fit();
@@ -1703,7 +1724,7 @@
 			this.fit();
 		},
 		draw : function(){
-			var ctx = this.ctx,
+			var ctx = this.ctx, 
 				yLabelGap = (this.endPoint - this.startPoint) / this.steps,
 				xStart = Math.round(this.xScalePaddingLeft);
 			if (this.display){

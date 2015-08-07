@@ -1,7 +1,7 @@
-
+.gitignore
 .DS_Store
 
 node_modules/*
 custom/*
-
+samples/
 docs/index.md

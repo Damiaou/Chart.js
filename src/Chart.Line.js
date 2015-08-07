@@ -53,7 +53,9 @@
 		legendTemplate : "<ul class=\"<%=name.toLowerCase()%>-legend\"><% for (var i=0; i<datasets.length; i++){%><li><span style=\"background-color:<%=datasets[i].strokeColor%>\"><%if(datasets[i].label){%><%=datasets[i].label%><%}%></span></li><%}%></ul>",
 
 		//Boolean - Whether to horizontally center the label and point dot inside the grid
-		offsetGridLines : false
+		offsetGridLines : false,
+
+		backgroundImage : 'false',
 
 	};
 
@@ -70,6 +72,7 @@
 				display: this.options.pointDot,
 				hitDetectionRadius : this.options.pointHitDetectionRadius,
 				ctx : this.chart.ctx,
+				backgroundImage : this.backgroungImage,
 				inRange : function(mouseX){
 					return (Math.pow(mouseX-this.x, 2) < Math.pow(this.radius + this.hitDetectionRadius,2));
 				}
@@ -263,7 +266,7 @@
 			this.clear();
 
 			var ctx = this.chart.ctx;
-
+			
 			// Some helper methods for getting the next/prev points
 			var hasValue = function(item){
 				return item.value !== null;
@@ -274,9 +277,11 @@
 			previousPoint = function(point, collection, index){
 				return helpers.findPreviousWhere(collection, hasValue, index) || point;
 			};
+			
+			this.background.draw();
 
 			this.scale.draw(easingDecimal);
-
+			
 
 			helpers.each(this.datasets,function(dataset){
 				var pointsWithValues = helpers.where(dataset.points, hasValue);
