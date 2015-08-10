@@ -214,8 +214,29 @@
 			};
 
 			var bgOptions = {
+				templateString : this.options.scaleLabel,
+				xLabels : labels,
+				calculateYRange : function(currentHeight){
+					var updatedRanges = helpers.calculateScaleRange(
+						dataTotal(),
+						currentHeight,
+						this.fontSize,
+						this.beginAtZero,
+						this.integersOnly
+					);
+					helpers.extend(this, updatedRanges);
+				},
+				beginAtZero : this.options.scaleBeginAtZero,
+				integersOnly : this.options.scaleIntegersOnly,
 				ctx : this.chart.ctx,
-
+				font : helpers.fontString(this.options.scaleFontSize, this.options.scaleFontStyle, this.options.scaleFontFamily),
+				fontSize : this.options.scaleFontSize,
+				height : this.chart.height,
+				width : this.chart.width,
+				offsetGridLines : this.options.offsetGridLines,
+				padding: (this.options.showScale) ? 0 : this.options.pointDotRadius + this.options.pointDotStrokeWidth,
+				showLabels : this.options.scaleShowLabels,
+				display : this.options.showScale
 			}
 
 			if (this.options.scaleOverride){

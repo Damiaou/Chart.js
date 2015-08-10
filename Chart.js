@@ -1551,27 +1551,55 @@
 			this.fit();
 
 		},
+		buildYLabels : function(){
+			this.calculateYRange();
+			this.yLabels = [];
+
+			var stepDecimalPlaces = getDecimalPlaces(this.stepValue);
+
+			for (var i=0; i<=this.steps; i++){
+				this.yLabels.push(template(this.templateString,{value:(this.min + (i * this.stepValue)).toFixed(stepDecimalPlaces)}));
+			}
+			this.yLabelWidth = (this.display && this.showLabels) ? longestText(this.ctx,this.font,this.yLabels) + 10 : 0;
+			console.log(this.stepValue);
+
+		},
 		fit: function(){
 			// To do that we need the base line at the top and base of the chart, assuming there is no x label rotation
+			//calculateScaleRange();
+			this.buildYLabels();
+			// on trouve les points de départ
 			this.startPoint = (this.display) ? this.fontSize : 0;
 			this.endPoint = (this.display) ? this.height - (this.fontSize * 1.5) - 5 : this.height; // -5 to pad labels
+			//helpers.calculateScaleRange();
+
 			
-		},
-		calculateXLabelRotation : function(){
 			
 		},
 		drawingArea: function(){
 			return this.startPoint - this.endPoint;
 		},
+		
 		draw: function(){
-
+			
+			//array X
+			var firstWidth = this.ctx.measureText(this.xLabels[0]).width,
+				lastWidth = this.ctx.measureText(this.xLabels[this.xLabels.length - 1]).width,
+				firstRotated,
+				lastRotated;
 			console.log(this);
+			
+			// padding pour savoir quand faire démarrer 
+			this.xScalePaddingRight = lastWidth/2 + 3;
+			this.xScalePaddingLeft = (firstWidth/2 > this.yLabelWidth) ? firstWidth/2 : this.yLabelWidth;
+			
 			var ctx = this.ctx;
 			var color = "#f2dede";
 			
-			ctx.rect(0, 0, 400, 100);
+			ctx.rect(this.xScalePaddingLeft - 5, this.startPoint - 5, this.width - this.startPoint + 5, this.endPoint);
 			ctx.fillStyle = color;
 			ctx.fill();
+			
 		}
 	});
 
@@ -1601,6 +1629,7 @@
 		},
 		// Fitting loop to rotate x Labels and figure out what fits there, and also calculate how many Y steps to use
 		fit: function(){
+
 			console.log(this);
 			// First we need the width of the yLabels, assuming the xLabels aren't rotated
 
@@ -2941,8 +2970,29 @@
 			};
 
 			var bgOptions = {
+				templateString : this.options.scaleLabel,
+				xLabels : labels,
+				calculateYRange : function(currentHeight){
+					var updatedRanges = helpers.calculateScaleRange(
+						dataTotal(),
+						currentHeight,
+						this.fontSize,
+						this.beginAtZero,
+						this.integersOnly
+					);
+					helpers.extend(this, updatedRanges);
+				},
+				beginAtZero : this.options.scaleBeginAtZero,
+				integersOnly : this.options.scaleIntegersOnly,
 				ctx : this.chart.ctx,
-
+				font : helpers.fontString(this.options.scaleFontSize, this.options.scaleFontStyle, this.options.scaleFontFamily),
+				fontSize : this.options.scaleFontSize,
+				height : this.chart.height,
+				width : this.chart.width,
+				offsetGridLines : this.options.offsetGridLines,
+				padding: (this.options.showScale) ? 0 : this.options.pointDotRadius + this.options.pointDotStrokeWidth,
+				showLabels : this.options.scaleShowLabels,
+				display : this.options.showScale
 			}
 
 			if (this.options.scaleOverride){
