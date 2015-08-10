@@ -1545,28 +1545,36 @@
 			}
 		}
 	});
-	Chart.BackgroundImage = Chart.Element.extend({
+
+	Chart.backgroundImage = Chart.Element.extend({
 		initialize : function(){
 			this.fit();
+
 		},
 		fit: function(){
-			// MUST define the X
-			this.startPoint = this.startY;
-			this.endPoint = this.endY;
-
+			// To do that we need the base line at the top and base of the chart, assuming there is no x label rotation
+			this.startPoint = (this.display) ? this.fontSize : 0;
+			this.endPoint = (this.display) ? this.height - (this.fontSize * 1.5) - 5 : this.height; // -5 to pad labels
+			
+		},
+		calculateXLabelRotation : function(){
+			
 		},
 		drawingArea: function(){
 			return this.startPoint - this.endPoint;
 		},
 		draw: function(){
-			ctx = this.ctx;
-			color = this.bgColor;
-			ctx.rect(this.startPoint, this.endPoint, this.bgWidth, this.bgHeight);
+
+			console.log(this);
+			var ctx = this.ctx;
+			var color = "#f2dede";
+			
+			ctx.rect(0, 0, 400, 100);
 			ctx.fillStyle = color;
 			ctx.fill();
 		}
-
 	});
+
 	Chart.Scale = Chart.Element.extend({
 		initialize : function(){
 			this.fit();
@@ -1593,6 +1601,7 @@
 		},
 		// Fitting loop to rotate x Labels and figure out what fits there, and also calculate how many Y steps to use
 		fit: function(){
+			console.log(this);
 			// First we need the width of the yLabels, assuming the xLabels aren't rotated
 
 			// To do that we need the base line at the top and base of the chart, assuming there is no x label rotation
@@ -2931,6 +2940,11 @@
 				display : this.options.showScale
 			};
 
+			var bgOptions = {
+				ctx : this.chart.ctx,
+
+			}
+
 			if (this.options.scaleOverride){
 				helpers.extend(scaleOptions, {
 					calculateYRange: helpers.noop,
@@ -2943,6 +2957,7 @@
 
 
 			this.scale = new Chart.Scale(scaleOptions);
+			this.backgroundImage = new Chart.backgroundImage(bgOptions);
 		},
 		addData : function(valuesArray,label){
 			//Map the values array for each of the datasets
@@ -2995,9 +3010,9 @@
 			previousPoint = function(point, collection, index){
 				return helpers.findPreviousWhere(collection, hasValue, index) || point;
 			};
-			ctx.rect(23,8,503,120);
-			ctx.fillStyle="rgba(150, 10, 20, 0.5)";
-			ctx.fill();
+			
+			this.backgroundImage.draw();
+
 			this.scale.draw(easingDecimal);
 			
 

@@ -213,6 +213,11 @@
 				display : this.options.showScale
 			};
 
+			var bgOptions = {
+				ctx : this.chart.ctx,
+
+			}
+
 			if (this.options.scaleOverride){
 				helpers.extend(scaleOptions, {
 					calculateYRange: helpers.noop,
@@ -225,6 +230,7 @@
 
 
 			this.scale = new Chart.Scale(scaleOptions);
+			this.backgroundImage = new Chart.backgroundImage(bgOptions);
 		},
 		addData : function(valuesArray,label){
 			//Map the values array for each of the datasets
@@ -278,7 +284,7 @@
 				return helpers.findPreviousWhere(collection, hasValue, index) || point;
 			};
 			
-			this.background.draw();
+			this.backgroundImage.draw();
 
 			this.scale.draw(easingDecimal);
 			
