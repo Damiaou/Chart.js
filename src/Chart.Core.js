@@ -1586,43 +1586,55 @@
 			var ctx = this.ctx;
 			var maxY = parentBg.yLabels[parentBg.yLabels.length - 1];
 			for (var i = 0; i < this.backgroundImageDatas.length; i++) {
+				
 				var current = this.backgroundImageDatas[i];
 				ctx.fillStyle = current.color;
 				// on va stocke les paramètres dans variables pour tous loggés
 				if(i == 0){
 					if( this.backgroundImageDatas.length > 1 ){
+						
 						var x = parentBg.xScalePaddingLeft,
 							y = ((maxY - current.startY) * parentBg.endPoint ) / maxY,
 							w = parentBg.width - (this.xScalePaddingRight + this.xScalePaddingLeft),
-							h = ((parentBg.endPoint * ((maxY - current.endY) - (maxY - current.startY))) / maxY)
+							h = ((parentBg.endPoint * ((maxY - current.endY) - (maxY - current.startY))) / maxY) + 2
 						;
+						
 					} else {
-
+						var endPointTmp = parentBg.endPoint
+						parentBg.endPoint = parentBg.endPoint - this.startPoint;
 						var x = parentBg.xScalePaddingLeft,
-							y = ((maxY - current.startY) * parentBg.endPoint ) / maxY,
+							y = ((maxY - current.startY) * parentBg.endPoint ) / maxY + 12,
 							w = parentBg.width - (this.xScalePaddingRight + this.xScalePaddingLeft),
-							h = ((parentBg.endPoint * ((maxY - current.endY) - (maxY - current.startY))) / maxY) + this.startPoint 
+							h = ((parentBg.endPoint * ((maxY - current.endY) - (maxY - current.startY))) / maxY) 
 						;
+						parentBg.endPoint = endPointTmp;
 					}
 					
 				} else {
 					if(i == this.backgroundImageDatas.length - 1){
+						var endPointTmp = parentBg.endPoint
+						parentBg.endPoint = parentBg.endPoint - this.startPoint;
+						
 						var x = parentBg.xScalePaddingLeft,
-							y = ((maxY - current.startY) * parentBg.endPoint ) / maxY + 9,
+							y = ((maxY - current.startY) * parentBg.endPoint ) / maxY + 12,
 							w = parentBg.width - (this.xScalePaddingRight + this.xScalePaddingLeft),
-							h = ((parentBg.endPoint * ((maxY - current.endY) - (maxY - current.startY))) / maxY) + 3
+							h = ((parentBg.endPoint * ((maxY - current.endY) - (maxY - current.startY))) / maxY) 
 						;
+						parentBg.endPoint = endPointTmp;
 					} else {
+						var endPointTmp = parentBg.endPoint
+						parentBg.endPoint = parentBg.endPoint - this.startPoint;
+						// console.log(current.startY);
 						var x = parentBg.xScalePaddingLeft,
-							y = ((maxY - current.startY) * parentBg.endPoint ) / maxY + 3,
+							y = ((maxY - current.startY) * parentBg.endPoint ) / maxY + 12 ,
 							w = parentBg.width - (this.xScalePaddingRight + this.xScalePaddingLeft),
-							h = ((parentBg.endPoint * ((maxY - current.endY) - (maxY - current.startY))) / maxY)
+							h = ((parentBg.endPoint * ((maxY - current.endY) - (maxY - current.startY))) / maxY) 
 						;
-					}
-					
+							//console.log('X => ' + x + '  // Y => ' + y + '  // W => ' + w + '  // H => ' + h );
+						parentBg.endPoint = endPointTmp;
+					}					
 				}
-				
-				console.log('X => ' + x + '  // Y => ' + y + '  // W => ' + w + '  // H => ' + h );
+				// créer le rectangle				
 				ctx.fillRect(
 					x, 
 					y, 
