@@ -1547,59 +1547,68 @@
 	});
 
 	Chart.backgroundImage = Chart.Element.extend({
+
 		initialize : function(){
+
 			this.fit();
 
 		},
 		buildYLabels : function(){
 			this.calculateYRange();
 			this.yLabels = [];
-
 			var stepDecimalPlaces = getDecimalPlaces(this.stepValue);
-
 			for (var i=0; i<=this.steps; i++){
 				this.yLabels.push(template(this.templateString,{value:(this.min + (i * this.stepValue)).toFixed(stepDecimalPlaces)}));
 			}
 			this.yLabelWidth = (this.display && this.showLabels) ? longestText(this.ctx,this.font,this.yLabels) + 10 : 0;
 			console.log(this.stepValue);
-
 		},
 		fit: function(){
-			// To do that we need the base line at the top and base of the chart, assuming there is no x label rotation
-			//calculateScaleRange();
 			this.buildYLabels();
 			// on trouve les points de départ
 			this.startPoint = (this.display) ? this.fontSize : 0;
-			this.endPoint = (this.display) ? this.height - (this.fontSize * 1.5) - 5 : this.height; // -5 to pad labels
-			//helpers.calculateScaleRange();
-
-			
-			
+			this.endPoint = (this.display) ? this.height - (this.fontSize * 1.5) - 5 : this.height;			
 		},
 		drawingArea: function(){
 			return this.startPoint - this.endPoint;
-		},
-		
-		draw: function(){
-			
+		},		
+		draw: function(){			
 			//array X
 			var firstWidth = this.ctx.measureText(this.xLabels[0]).width,
 				lastWidth = this.ctx.measureText(this.xLabels[this.xLabels.length - 1]).width,
 				firstRotated,
 				lastRotated;
-			console.log(this);
-			
+			//console.log(this);			
 			// padding pour savoir quand faire démarrer 
 			this.xScalePaddingRight = lastWidth/2 + 3;
-			this.xScalePaddingLeft = (firstWidth/2 > this.yLabelWidth) ? firstWidth/2 : this.yLabelWidth;
+			this.xScalePaddingLeft = (firstWidth/2 > this.yLabelWidth) ? firstWidth/2 : this.yLabelWidth;			
 			
+			
+			var parentBg = this;
 			var ctx = this.ctx;
-			var color = "#f2dede";
+			for (var i = this.backgroundImageDatas.length - 1; i >= 0; i--) {
+					var current = this.backgroundImageDatas[i];
+					if(i == 0){
+						console.log(parentBg);
+						console.log(current);
+					}
+					ctx.fillStyle = current.color;
+					ctx.fillRect(parentBg.xScalePaddingLeft - 5, 
+						(current.startY * ((parentBg.endPoint ) / current.endY)) + 8, 
+						parentBg.width - parentBg.xScalePaddingRight, 
+						current.endY
+					);
+					
+					// ctx.fill();		
+					
+			};
 			
-			ctx.rect(this.xScalePaddingLeft - 5, this.startPoint - 5, this.width - this.startPoint + 5, this.endPoint);
-			ctx.fillStyle = color;
-			ctx.fill();
+			// parentBg.backgroundImageDatas.helpers.each(function(data){
+			// 	console.log(this);
+			// })		
 			
+			
+				
 		}
 	});
 

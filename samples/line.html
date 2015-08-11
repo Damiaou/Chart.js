@@ -13,7 +13,7 @@
 
 
 	<script>
-		var randomScalingFactor = function(){ return Math.round(Math.random()*100)};
+		var randomScalingFactor = function(){ return Math.round(Math.random()*10000)};
 		var lineChartData = {
 			labels : ["January","February","March","April","May","June","July"],
 			datasets : [
@@ -25,7 +25,7 @@
 					pointStrokeColor : "#fff",
 					pointHighlightFill : "#fff",
 					pointHighlightStroke : "rgba(220,220,220,1)",
-					data : [randomScalingFactor(),randomScalingFactor(),randomScalingFactor(),randomScalingFactor(),randomScalingFactor(),randomScalingFactor(),randomScalingFactor()]
+					data : [10000, 6000, 100 , 1200, 4000, 8000, 2156]
 				},
 				{
 					label: "My Second dataset",
@@ -36,6 +36,18 @@
 					pointHighlightFill : "#fff",
 					pointHighlightStroke : "rgba(151,187,205,1)",
 					data : [randomScalingFactor(),randomScalingFactor(),randomScalingFactor(),randomScalingFactor(),randomScalingFactor(),randomScalingFactor(),randomScalingFactor()]
+				}
+			],
+			backgroundImageDatas : [
+				{
+					color : "#f2dede",
+					startY : 7000,
+					endY : 10000,
+				},
+				{
+					color : "#DFF0D9",
+					startY : 0,
+					endY : 6999,
 				}
 			]
 

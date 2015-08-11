@@ -55,7 +55,7 @@
 		//Boolean - Whether to horizontally center the label and point dot inside the grid
 		offsetGridLines : false,
 
-		backgroundImage : 'false',
+		//backgroundImageDatas : null,
 
 	};
 
@@ -72,13 +72,16 @@
 				display: this.options.pointDot,
 				hitDetectionRadius : this.options.pointHitDetectionRadius,
 				ctx : this.chart.ctx,
-				backgroundImage : this.backgroungImage,
+				backgroundImage : this.backgroundImage,
 				inRange : function(mouseX){
 					return (Math.pow(mouseX-this.x, 2) < Math.pow(this.radius + this.hitDetectionRadius,2));
 				}
 			});
 
+
+
 			this.datasets = [];
+			this.backgroundImageDatas = [];
 
 			//Set up tooltip events on the chart
 			if (this.options.showTooltips){
@@ -94,6 +97,16 @@
 					this.showTooltip(activePoints);
 				});
 			}
+			var glbl = this;
+			helpers.each(data.backgroundImageDatas, function(backgroundImageData) {
+				var backgroundImageDataObj = {
+					color : backgroundImageData.color,
+					startY : backgroundImageData.startY,
+					endY : backgroundImageData.endY,
+				}
+				
+				glbl.backgroundImageDatas.push(backgroundImageDataObj);
+			});
 
 			//Iterate through each of the datasets, and build this into a property of the chart
 			helpers.each(data.datasets,function(dataset){
@@ -236,7 +249,8 @@
 				offsetGridLines : this.options.offsetGridLines,
 				padding: (this.options.showScale) ? 0 : this.options.pointDotRadius + this.options.pointDotStrokeWidth,
 				showLabels : this.options.scaleShowLabels,
-				display : this.options.showScale
+				display : this.options.showScale,
+				backgroundImageDatas : this.backgroundImageDatas
 			}
 
 			if (this.options.scaleOverride){
