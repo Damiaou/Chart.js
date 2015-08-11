@@ -1572,43 +1572,64 @@
 		drawingArea: function(){
 			return this.startPoint - this.endPoint;
 		},		
-		draw: function(){			
+		draw: function(){	
 			//array X
 			var firstWidth = this.ctx.measureText(this.xLabels[0]).width,
 				lastWidth = this.ctx.measureText(this.xLabels[this.xLabels.length - 1]).width,
 				firstRotated,
 				lastRotated;
-			//console.log(this);			
+
 			// padding pour savoir quand faire démarrer 
 			this.xScalePaddingRight = lastWidth/2 + 3;
 			this.xScalePaddingLeft = (firstWidth/2 > this.yLabelWidth) ? firstWidth/2 : this.yLabelWidth;			
-			
-			
 			var parentBg = this;
 			var ctx = this.ctx;
-			for (var i = this.backgroundImageDatas.length - 1; i >= 0; i--) {
-					var current = this.backgroundImageDatas[i];
-					if(i == 0){
-						console.log(parentBg);
-						console.log(current);
+			var maxY = parentBg.yLabels[parentBg.yLabels.length - 1];
+			for (var i = 0; i < this.backgroundImageDatas.length; i++) {
+				var current = this.backgroundImageDatas[i];
+				ctx.fillStyle = current.color;
+				// on va stocke les paramètres dans variables pour tous loggés
+				if(i == 0){
+					if( this.backgroundImageDatas.length > 1 ){
+						var x = parentBg.xScalePaddingLeft,
+							y = ((maxY - current.startY) * parentBg.endPoint ) / maxY,
+							w = parentBg.width - (this.xScalePaddingRight + this.xScalePaddingLeft),
+							h = ((parentBg.endPoint * ((maxY - current.endY) - (maxY - current.startY))) / maxY)
+						;
+					} else {
+
+						var x = parentBg.xScalePaddingLeft,
+							y = ((maxY - current.startY) * parentBg.endPoint ) / maxY,
+							w = parentBg.width - (this.xScalePaddingRight + this.xScalePaddingLeft),
+							h = ((parentBg.endPoint * ((maxY - current.endY) - (maxY - current.startY))) / maxY) + this.startPoint 
+						;
 					}
-					ctx.fillStyle = current.color;
-					ctx.fillRect(parentBg.xScalePaddingLeft - 5, 
-						(current.startY * ((parentBg.endPoint ) / current.endY)) + 8, 
-						parentBg.width - parentBg.xScalePaddingRight, 
-						current.endY
-					);
 					
-					// ctx.fill();		
+				} else {
+					if(i == this.backgroundImageDatas.length - 1){
+						var x = parentBg.xScalePaddingLeft,
+							y = ((maxY - current.startY) * parentBg.endPoint ) / maxY + 9,
+							w = parentBg.width - (this.xScalePaddingRight + this.xScalePaddingLeft),
+							h = ((parentBg.endPoint * ((maxY - current.endY) - (maxY - current.startY))) / maxY) + 3
+						;
+					} else {
+						var x = parentBg.xScalePaddingLeft,
+							y = ((maxY - current.startY) * parentBg.endPoint ) / maxY + 3,
+							w = parentBg.width - (this.xScalePaddingRight + this.xScalePaddingLeft),
+							h = ((parentBg.endPoint * ((maxY - current.endY) - (maxY - current.startY))) / maxY)
+						;
+					}
 					
-			};
-			
-			// parentBg.backgroundImageDatas.helpers.each(function(data){
-			// 	console.log(this);
-			// })		
-			
-			
+				}
 				
+				console.log('X => ' + x + '  // Y => ' + y + '  // W => ' + w + '  // H => ' + h );
+				ctx.fillRect(
+					x, 
+					y, 
+					w, 
+					h
+				);					
+			};					
 		}
 	});
 
